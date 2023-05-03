@@ -1,0 +1,79 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model IEnumerable<UserModel>
+
+<h2>User List</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Add New User</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th hidden>CityId</th>
+            <th hidden>StateId</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>@Html.DisplayFor(modelItem => item.Phone)</td>
+                <td>@Html.DisplayFor(modelItem => item.Address)</td>
+                <td hidden>@Html.DisplayFor(modelItem => item.CityId)</td>
+                <td hidden>@Html.DisplayFor(modelItem => item.StateId)</td>
+                <td>@Html.DisplayFor(modelItem => item.City.CityName)</td>
+                <td>@Html.DisplayFor(modelItem => item.State.StateName)</td>
+                <td>
+                    <a asp-action="Update" asp-route-id="@item.Id" asp-route-model="@item">Edit</a> |
+                    <a class="delete-link" asp-action="Delete" id="deleteId" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.delete-link').on('click', function (e) {
+                e.preventDefault();
+                var url = $(this).attr('href');
+                bootbox.confirm({
+                    message: "Are you sure you want to delete this user?",
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-danger'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-secondary'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            window.location.href = url;
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}
+
