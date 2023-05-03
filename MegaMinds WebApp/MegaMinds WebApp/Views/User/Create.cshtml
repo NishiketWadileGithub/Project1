@@ -1,0 +1,104 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model UserModel
+
+<h1>Add User</h1>
+
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Phone" class="control-label"></label>
+        <input asp-for="Phone" class="form-control" />
+        <span asp-validation-for="Phone" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Address" class="control-label"></label>
+        <input asp-for="Address" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="StateId" class="control-label"></label>
+        <select asp-for="StateId" class="form-control" id="stateDropdown" asp-items="@(new SelectList(Model.StatesList, "StateId", "StateName"))"></select>
+        <span asp-validation-for="StateId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CityId" class="control-label"></label>
+        <select asp-for="CityId" class="form-control" id="cityDropdown" asp-items="@(new SelectList(Model.CitiesList, "Id", "CityName"))"></select>
+        @*<span asp-validation-for="CityId" class="text-danger"></span>*@
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="Agree" />
+            <label class="form-check-label" for="Agree">I agree to the terms and conditions</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" disabled class="btn btn-primary"></input>
+        <a asp-action="GetAll" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+@section Scripts {
+    <script>
+        $(function () {
+            // Listen for change event on the state dropdown
+            $('#stateDropdown').change(function () {
+                // Send an AJAX request to retrieve cities for the selected state
+                var stateId = $('#stateDropdown').val();
+                $.ajax({
+                    url: '@Url.Action("GetCitiesByStateId", "User")',
+                    type: 'GET',
+                    data: { stateId: stateId },
+                    success: function (result) {
+                        // Clear the existing options in the city dropdown
+                        $('#cityDropdown').empty();
+                        // Append the new options retrieved from the server
+                        $.each(result, function (i, city) {
+                            $('#cityDropdown').append($('<option>').val(city.cityId).text(city.cityName));
+                        });
+                        // Set the selected city ID based on the selected State
+                        var cityId = $('#cityDropdown option:selected').val();
+                        $('#CityId').val(cityId);
+                        userModel.CityId = cityId;
+                        userModel.CityId = $('#cityDropdown').val();
+                        $('#cityDropdown option[value="' + cityId + '"]').prop('selected', true);
+                        
+                    }
+                });
+            });
+            // listen for change event on the city dropdown
+            $('#cityDropdown').change(function () {
+                // set the selected city id as the value of the cityid field in the form
+                var cityid = $('#cityDropdown').val();
+                $('#cityDropdown').val(cityid);
+                userModel.CityId = $('#cityDropdown').val();
+                userModel.CityId = cityId;
+                
+            });
+        });
+
+    </script>
+    <script>
+        $(function () { 
+            // Listen for change event on the Agree checkbox
+            $('#Agree').change(function () {
+                // Enable the submit button if the checkbox is checked
+                $('input[type="submit"]').prop('disabled', !this.checked);
+            });
+        });
+    </script>
+    }
+
+
