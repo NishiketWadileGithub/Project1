@@ -8,3 +8,6 @@
 /MegaMinds WebApp/.vs/MegaMinds WebApp/v17/.suo
 /MegaMinds WebApp/MegaMinds WebApp/obj/Debug/net6.0/MegaMinds WebApp.GeneratedMSBuildEditorConfig.editorconfig
 /.vs
+/MegaMinds WebApp/.vs/MegaMinds WebApp/DesignTimeBuild
+/.gitignore
+/.gitignore

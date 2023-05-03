@@ -1,3 +1,7 @@
+using MegaMinds_WebApp.Data;
+using MegaMinds_WebApp.Repositories;
+using Microsoft.EntityFrameworkCore;
+
 namespace MegaMinds_WebApp
 {
     public class Program
@@ -6,8 +10,15 @@ namespace MegaMinds_WebApp
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Add database context
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IStateRepository, StateRepository>();
+            builder.Services.AddScoped<ICityRepository, CityRepository>();
 
             var app = builder.Build();
 
